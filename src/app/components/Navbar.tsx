@@ -10,6 +10,7 @@ import NewFillIcon from "./ui/icons/NewFillIcon";
 import { usePathname } from "next/navigation";
 import ColorButton from "./ui/ColorButton";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Avatar from "./Avatar";
 
 const menu = [
   {
@@ -31,10 +32,12 @@ const menu = [
 export default function Navbar() {
   const pathName = usePathname();
   const { data: session } = useSession();
+  const user = session?.user;
+  console.debug("session", session);
   return (
     <div className="flex justify-between items-center px-6">
       <Link href="/">
-        <h1 className="text-3xl font-bold">beengram</h1>
+        <h1 className="text-3xl font-bold">beenstagram</h1>
       </Link>
       <nav>
         <ul className="flex gap-4 items-center p-4">
@@ -45,11 +48,23 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-          {session ? (
-            <ColorButton text="Sign out" onClick={() => signOut()} />
-          ) : (
-            <ColorButton text="Sign in" onClick={() => signIn()} />
+          {user && (
+            // 로그인한 유저가 있다면, 구글 Oauth에서 넘겨주는 session정보의 image를 이용하여 아바타 구성
+            <li>
+              <Link href={`/user/${user.username}`}>
+                <Avatar image={user.image} />
+              </Link>
+            </li>
           )}
+          <li>
+            {session ? (
+              // 사용자가 로그인을 했다면?
+              <ColorButton text="로그아웃" onClick={() => signOut()} />
+            ) : (
+              // 사용자가 로그인을 하지 않았다면?
+              <ColorButton text="로그인" onClick={() => signIn()} />
+            )}
+          </li>
         </ul>
       </nav>
     </div>
