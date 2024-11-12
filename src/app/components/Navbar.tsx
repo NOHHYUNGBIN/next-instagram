@@ -52,7 +52,7 @@ export default function Navbar() {
             // 로그인한 유저가 있다면, 구글 Oauth에서 넘겨주는 session정보의 image를 이용하여 아바타 구성
             <li>
               <Link href={`/user/${user.username}`}>
-                <Avatar image={user.image} />
+                <Avatar image={user.image} size="small" highlight={true} />
               </Link>
             </li>
           )}
