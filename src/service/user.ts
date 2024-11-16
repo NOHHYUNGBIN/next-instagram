@@ -25,13 +25,12 @@ export async function addUser({ id, username, email, name, image }: OauthUser) {
 }
 
 export async function getUserByUsername(username: string) {
-  return client.fetch(
-    `*[_type == "user" && username == "${username}"][0]{
-    ...,
+  const query = `*[_type == "user" && username == "${username}"][0]{
+      ...,
       "id":_id,
       following[]->{username,image},
       followers[]->{username,image},
       "bookmarks":bookmarks[]->_id
-    }`
-  );
+    }`;
+  return client.fetch(query, {}, { cache: "no-store" });
 }

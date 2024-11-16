@@ -12,10 +12,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user: { id, name, image, email } }) {
-      console.debug("idididid", id);
-      console.debug("namenamenamename", name);
-      console.debug("imageimageimageimage", image);
-      console.debug("emailemailemailemail", email);
       if (!email) return false;
       addUser({
         id,
@@ -27,7 +23,6 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async session({ session }) {
-      console.debug("sessionsessionsession", session);
       const user = session?.user;
       if (!!user) {
         session.user = {
