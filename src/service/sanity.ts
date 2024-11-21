@@ -1,5 +1,6 @@
 import { createClient } from "@sanity/client";
-
+import ImageUrlBuilder from "@sanity/image-url";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 export const client = createClient({
   projectId: process.env.SANITY_PROJECT_ID,
   dataset: process.env.SANITY_DATASET,
@@ -7,3 +8,8 @@ export const client = createClient({
   apiVersion: "2024-11-10",
   token: process.env.SANITY_SECRET_TOKEN, // 읽기만 한다면 필요없지만 쓰기를 한다면 토큰이 필요하다.
 });
+const builder = ImageUrlBuilder(client);
+
+export function urlFor(source: SanityImageSource) {
+  return builder.image(source).width(800).url();
+}
