@@ -9,9 +9,23 @@ const GridLoader = dynamic(
     ssr: false,
   }
 );
+const PropagateLoader = dynamic(
+  () => import("react-spinners").then((lib) => lib.PropagateLoader),
+  {
+    ssr: false,
+  }
+);
 type Props = {
   color?: string;
 };
-export default function GridSpinner({ color = "pink" }: Props) {
+type Props2 = {
+  color?: string;
+  size?: number;
+};
+export function GridSpinner({ color = "pink" }: Props) {
   return <GridLoader color={color} />;
+}
+
+export function GridSpinner2({ color = "pink", size = 8 }: Props2) {
+  return <PropagateLoader color={color} size={size} />;
 }

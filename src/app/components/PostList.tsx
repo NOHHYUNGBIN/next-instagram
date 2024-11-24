@@ -2,15 +2,14 @@
 import { SimplePost } from "@/model/post";
 import useSWR from "swr";
 import PostListCard from "./PostListCard";
-import GridSpinner from "./ui/GridSpinner";
+import { GridSpinner } from "./ui/GridSpinner";
 
 export default function PostList() {
   const { data: posts, isLoading: loading } = useSWR<SimplePost[]>("/api/post");
-  console.debug("posts", posts);
   return (
     <section>
       {loading && (
-        <div>
+        <div className="text-center mt-32">
           <GridSpinner color="pink" />
         </div>
       )}
