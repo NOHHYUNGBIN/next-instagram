@@ -34,3 +34,17 @@ export async function getUserByUsername(username: string) {
     }`;
   return client.fetch(query, {}, { cache: "no-store" });
 }
+
+export async function searchUsers(keyword?: string) {
+  const query = keyword
+    ? `&& ((name match "${keyword}") || (name match "${keyword}"))`
+    : "";
+  return client.fetch(
+    `*[_type =="user" ${query}]{
+      ...,
+      "following": count(following),
+      "followers": count(followers)
+    }
+    `
+  );
+}
