@@ -5,14 +5,16 @@ import React, { FormEvent, useState } from "react";
 import useSWR from "swr";
 import { GridSpinner } from "./ui/GridSpinner";
 import UserCard from "./UserCard";
+import useDebounce from "@/hooks/debounce";
 
 export default function UserSearch() {
   const [keyword, setKeyword] = useState("");
+  const debouncedKeyword = useDebounce(keyword, 1000);
   const {
     data: users,
     isLoading,
     error,
-  } = useSWR<ProfileUser[]>(`/api/search/${keyword}`);
+  } = useSWR<ProfileUser[]>(`/api/search/${debouncedKeyword}`);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function UserSearch() {
           className="w-full text-xl p-3 outline-none border border-gray-400"
           type="text"
           autoFocus
-          placeholder="아이디나 이름을 검색하세요."
+          placeholder="아이디나 이름을 검색해보세요."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
@@ -33,7 +35,7 @@ export default function UserSearch() {
       {error && <p>에러발생</p>}
       {isLoading && <GridSpinner />}
       {!isLoading && !error && users?.length === 0 && (
-        <p>찾는 사용자가 없습니다.</p>
+        <p>찾으시는 사용자가 없습니다.😥</p>
       )}
       <ul className="w-full p-4 ">
         {users &&
