@@ -71,7 +71,6 @@ export async function getSavedPostsOf(username: string) {
     .then(mapPosts);
 }
 function mapPosts(posts: SimplePost[]) {
-  console.debug("postspostspostspostsposts", posts);
   return posts.map((post: SimplePost) => ({
     ...post,
     image: urlFor(post.image),
