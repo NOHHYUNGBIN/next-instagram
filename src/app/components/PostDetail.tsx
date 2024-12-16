@@ -13,7 +13,7 @@ export default function PostDetail({ post }: Props) {
   const { id, userImage, username, image, createdAt, likes } = post;
   const { data } = useSWR<FullPost>(`/api/post/${id}`);
   const comments = data?.comments;
-  console.debug("postpostpostpost!!!!!!!!!!!!!!!!!!!", post);
+
   return (
     <section className="flex w-full h-full">
       <div className="relative basis-3/5">
@@ -46,7 +46,7 @@ export default function PostDetail({ post }: Props) {
               )
             )}
         </ul>
-        <ActionBar likes={likes} username={username} createdAt={createdAt} />
+        <ActionBar post={post} />
         <CommentForm />
       </div>
     </section>
