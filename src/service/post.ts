@@ -13,6 +13,7 @@ const simplePostProjection = `
       "createdAt":_createdAt
   `;
 export async function getFollowingPostsOf(username: string) {
+  console.debug("usernameusername", username);
   return client
     .fetch(
       `*[_type == "post" && author->username == "${username}"
@@ -26,6 +27,7 @@ export async function getFollowingPostsOf(username: string) {
     .then(mapPosts);
 }
 export async function getPost(id: string) {
+  console.debug("ididid", id);
   return client
     .fetch(
       `*[_type == "post" && _id == "${id}"][0]{
