@@ -6,15 +6,13 @@ const simplePostProjection = `
       "username":author->username,
       "userImage": author->image,
       "image":photo,
-      "likesUsername":likes->username,
-      "likesId":likes->id,
+      "likes":likes[]->username,
       "text":comments[0].comment,
       "comments":count(comments),
       "id":_id,
       "createdAt":_createdAt
   `;
 export async function getFollowingPostsOf(username: string) {
-  console.debug("usernameusername", username);
   return client
     .fetch(
       `*[_type == "post" && author->username == "${username}"
