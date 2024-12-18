@@ -6,7 +6,8 @@ const simplePostProjection = `
       "username":author->username,
       "userImage": author->image,
       "image":photo,
-      "likes":likes[]->username,
+      "likesUsername":likes->username,
+      "likesId":likes->id,
       "text":comments[0].comment,
       "comments":count(comments),
       "id":_id,
@@ -22,12 +23,12 @@ export async function getFollowingPostsOf(username: string) {
       {},
       {
         useCdn: false,
+        cache: "no-cache",
       }
     )
     .then(mapPosts);
 }
 export async function getPost(id: string) {
-  console.debug("ididid", id);
   return client
     .fetch(
       `*[_type == "post" && _id == "${id}"][0]{
