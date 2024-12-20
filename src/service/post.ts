@@ -19,10 +19,7 @@ export async function getFollowingPostsOf(username: string) {
             || author._ref in *[_type == "user" && username == "${username}"].following[]._ref]
             | order(_createdAt desc){${simplePostProjection}}`,
       {},
-      {
-        useCdn: false,
-        cache: "no-cache",
-      }
+      { useCdn: false }
     )
     .then(mapPosts);
 }
@@ -38,7 +35,9 @@ export async function getPost(id: string) {
       comments[]{comment, "username":author->username, "image":author->image},
       "id":_id,
       "createdAt":_createdAt
-    }`
+    }`,
+      {},
+      { useCdn: false }
     )
     .then((post) => ({
       ...post,
@@ -85,6 +84,8 @@ function mapPosts(posts: SimplePost[]) {
   }));
 }
 export async function likePost(postId: string, userId: string) {
+  console.debug("postId", postId);
+  console.debug("userId", userId);
   return client
     .patch(postId)
     .setIfMissing({ likes: [] })
@@ -97,6 +98,8 @@ export async function likePost(postId: string, userId: string) {
     .commit({ autoGenerateArrayKeys: true });
 }
 export async function disLikePost(postId: string, userId: string) {
+  console.debug("postId", postId);
+  console.debug("userId", userId);
   return client
     .patch(postId)
     .unset([`likes[_ref=="${userId}"]`])

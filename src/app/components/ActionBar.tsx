@@ -27,7 +27,7 @@ export default function ActionBar({ post }: Props) {
     fetch("api/likes", {
       method: "PUT",
       body: JSON.stringify({ id, like }),
-    }).then(() => mutate("/api/post"));
+    }).then(() => mutate("/api/posts"));
     // 캐시 업데이트
   };
 
