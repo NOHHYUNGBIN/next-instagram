@@ -33,7 +33,9 @@ export async function getUserByUsername(username: string) {
       followers[]->{username,image},
       "bookmarks":bookmarks[]->_id
     }`;
-  return client.fetch(query, {}, { cache: "no-store" });
+  return client
+    .fetch(query, {}, { cache: "no-store" })
+    .then((user) => ({ ...user, bookmarks: user.bookmarks ?? [] }));
 }
 
 export async function searchUsers(keyword?: string) {
@@ -75,7 +77,7 @@ export async function getUserForProfile(username: string) {
       post: user.posts ?? 0,
     }));
 }
-export async function addBookmark(postId: string, userId: string) {
+export async function addBookmark(userId: string, postId: string) {
   return client
     .patch(userId)
     .setIfMissing({ bookmarks: [] })
@@ -87,7 +89,7 @@ export async function addBookmark(postId: string, userId: string) {
     ])
     .commit({ autoGenerateArrayKeys: true });
 }
-export async function removeBookmark(postId: string, userId: string) {
+export async function removeBookmark(userId: string, postId: string) {
   return client
     .patch(userId)
     .unset([`bookmarks[_ref=="${postId}"]`])
