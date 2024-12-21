@@ -60,7 +60,7 @@ export async function getLikedPostsOf(username: string) {
         ${simplePostProjection}
       }`,
       {},
-      { useCdn: false, cache: "no-store" }
+      { useCdn: false }
     )
     .then(mapPosts);
 }
@@ -82,7 +82,8 @@ function mapPosts(posts: SimplePost[]) {
   }));
 }
 export async function likePost(postId: string, userId: string) {
-  console.debug(postId);
+  console.debug("좋아요", postId);
+  console.debug("좋아요", userId);
   return client
     .patch(postId)
     .setIfMissing({ likes: [] })
@@ -95,6 +96,8 @@ export async function likePost(postId: string, userId: string) {
     .commit({ autoGenerateArrayKeys: true });
 }
 export async function disLikePost(postId: string, userId: string) {
+  console.debug("좋아요 취소", postId);
+  console.debug("좋아요 취소", userId);
   return client
     .patch(postId)
     .unset([`likes[_ref=="${userId}"]`])
