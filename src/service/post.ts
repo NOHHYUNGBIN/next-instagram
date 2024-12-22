@@ -35,7 +35,9 @@ export async function getPost(id: string) {
       comments[]{comment, "username":author->username, "image":author->image},
       "id":_id,
       "createdAt":_createdAt
-    }`
+    }`,
+      {},
+      { useCdn: false }
     )
     .then((post) => ({
       ...post,
