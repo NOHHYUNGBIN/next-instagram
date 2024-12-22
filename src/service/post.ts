@@ -17,7 +17,9 @@ export async function getFollowingPostsOf(username: string) {
     .fetch(
       `*[_type == "post" && author->username == "${username}"
             || author._ref in *[_type == "user" && username == "${username}"].following[]._ref]
-            | order(_createdAt desc){${simplePostProjection}}`
+            | order(_createdAt desc){${simplePostProjection}}`,
+      {},
+      { useCdn: false }
     )
     .then(mapPosts);
 }
@@ -58,9 +60,7 @@ export async function getLikedPostsOf(username: string) {
       `*[_type == "post" && "${username}" in likes[] -> username]
       | order(_createdAt desc) {
         ${simplePostProjection}
-      }`,
-      {},
-      { useCdn: false }
+      }`
     )
     .then(mapPosts);
 }
@@ -82,8 +82,6 @@ function mapPosts(posts: SimplePost[]) {
   }));
 }
 export async function likePost(postId: string, userId: string) {
-  console.debug("좋아요", postId);
-  console.debug("좋아요", userId);
   return client
     .patch(postId)
     .setIfMissing({ likes: [] })
@@ -96,10 +94,24 @@ export async function likePost(postId: string, userId: string) {
     .commit({ autoGenerateArrayKeys: true });
 }
 export async function disLikePost(postId: string, userId: string) {
-  console.debug("좋아요 취소", postId);
-  console.debug("좋아요 취소", userId);
   return client
     .patch(postId)
     .unset([`likes[_ref=="${userId}"]`])
     .commit();
+}
+export async function addComment(
+  postId: string,
+  userId: string,
+  comment: string
+) {
+  return client
+    .patch(postId)
+    .setIfMissing({ comments: [] })
+    .append("comments", [
+      {
+        comment,
+        author: { _ref: userId, _type: "reference" },
+      },
+    ])
+    .commit({ autoGenerateArrayKeys: true });
 }
