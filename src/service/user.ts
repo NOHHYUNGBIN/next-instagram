@@ -34,7 +34,7 @@ export async function getUserByUsername(username: string) {
       "bookmarks":bookmarks[]->_id
     }`;
   return client
-    .fetch(query, {}, { cache: "no-store" })
+    .fetch(query, undefined, { cache: "no-store" })
     .then((user) => ({ ...user, bookmarks: user.bookmarks ?? [] }));
 }
 
@@ -68,7 +68,9 @@ export async function getUserForProfile(username: string) {
       "following": count(following),
       "followers": count(followers),
       "posts": count(*[_type=="post" && author->username == "${username}"])
-    }`
+    }`,
+      undefined,
+      { cache: "no-store" }
     )
     .then((user) => ({
       ...user,
