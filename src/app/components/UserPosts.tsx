@@ -1,11 +1,11 @@
 "use client";
 import { ProfileUser } from "@/model/user";
 import { useState } from "react";
-import useSWR from "swr";
 import PostIcon from "./ui/icons/PostIcon";
 import BookmarkIcon from "./ui/icons/BookmarkIcon";
 import HeartIcon from "./ui/icons/HeartIcon";
 import PostGrid from "./PostGrid";
+import { CacheKeysContext } from "@/context/CacheKeyContext";
 
 type Props = {
   user: ProfileUser;
@@ -34,7 +34,11 @@ export default function UserPosts({ user: { username } }: Props) {
           </li>
         ))}
       </ul>
-      <PostGrid username={username} query={query} />
+      <CacheKeysContext.Provider
+        value={{ postsKey: `/api/users/${username}/${query}` }}
+      >
+        <PostGrid />
+      </CacheKeysContext.Provider>
     </section>
   );
 }

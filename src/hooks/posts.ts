@@ -1,3 +1,4 @@
+import { useCacheKeys } from "@/context/CacheKeyContext";
 import { Comment, SimplePost } from "@/model/post";
 import { useCallback } from "react";
 import useSWR from "swr";
@@ -14,13 +15,15 @@ async function addComment(id: string, comment: string) {
     body: JSON.stringify({ id, comment }),
   }).then((res) => res.json());
 }
-export default function usePosts(cacheKey: string = "/api/posts") {
+export default function usePosts() {
+  const cacheKeys = useCacheKeys();
+  console.debug("cacheKeys", cacheKeys.postsKey);
   const {
     data: posts,
     isLoading,
     error,
     mutate,
-  } = useSWR<SimplePost[]>(cacheKey);
+  } = useSWR<SimplePost[]>(cacheKeys.postsKey);
 
   const setLike = useCallback(
     (post: SimplePost, username: string, like: boolean) => {
