@@ -52,7 +52,7 @@ export default function NewPost({ user: { username, image } }: Props) {
     formData.append("file", file);
     formData.append("text", textRef.current?.value ?? "");
 
-    fetch("/api/post", { method: "POST", body: formData })
+    fetch("/api/posts", { method: "POST", body: formData })
       .then((res) => {
         if (!res.ok) {
           setError(`${res.status} ${res.statusText}`);
