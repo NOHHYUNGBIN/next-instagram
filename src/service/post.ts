@@ -17,9 +17,7 @@ export async function getFollowingPostsOf(username: string) {
     .fetch(
       `*[_type == "post" && author->username == "${username}"
             || author._ref in *[_type == "user" && username == "${username}"].following[]._ref]
-            | order(_createdAt desc){${simplePostProjection}}`,
-      {},
-      { useCdn: false }
+            | order(_createdAt desc){${simplePostProjection}}`
     )
     .then(mapPosts);
 }
@@ -35,9 +33,7 @@ export async function getPost(id: string) {
       comments[]{comment, "username":author->username, "image":author->image},
       "id":_id,
       "createdAt":_createdAt
-    }`,
-      {},
-      { useCdn: false }
+    }`
     )
     .then((post) => ({
       ...post,
