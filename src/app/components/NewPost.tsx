@@ -55,14 +55,12 @@ export default function NewPost({ user: { username, image } }: Props) {
     fetch("/api/post", { method: "POST", body: formData })
       .then((res) => {
         if (!res.ok) {
-          console.debug("res", res);
           setError(`${res.status} ${res.statusText}`);
           return;
         }
         router.push("/");
       })
       .catch((err) => {
-        console.debug("err.toString()", err.toString());
         setError(err.toString());
       })
       .finally(() => setLoading(false));
